@@ -2,6 +2,7 @@ const express = require('express')
 const route = express.Router()
 const authRoute =require("./auth")
 const shortUrlRoute =require("./shorturl")
+const { redirectToUrl } = require('../Controllers/shortnerController')
 
 
 route.get("/",(req,res)=>{
@@ -9,6 +10,8 @@ res.status(200).send("hello")
 })
 route.use("/auth",authRoute)
 route.use("/url",shortUrlRoute)
+
+route.get("/:id",redirectToUrl)
 
 route.use("",(req,res)=>{
     res.send("404 not found")

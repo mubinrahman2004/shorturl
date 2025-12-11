@@ -8,9 +8,10 @@ app.use(express.json());
 dbconfig()
 app.use(route)
 
-console.log(isValidUrl("https://github.com/mubinrahman2004/branch-1"));
+console.log(Math.floor(Math.random() * 100) + 1
+);
+  
 
-
-app.listen(3000, () => {
+app.listen(4000, () => {
   console.log(`server is running`)
 })

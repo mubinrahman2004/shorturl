@@ -1,28 +1,32 @@
 const userSchema = require("../models/userSchema");
+const jwt = require("jsonwebtoken");
 
 const { isValidEmail } = require("../utils/validation");
 
 const signup = async (req, res) => {
   const { fullName, email, password } = req.body;
-  try {
 
+  try {
     if (!fullName)
       return res.status(400).send({ message: "Full Name is required" });
+
     if (!email) return res.status(400).send({ message: "Email is required" });
-    if (!isValidEmail(email))
-      return res.status(400).send({ message: "Enter a valid email address" });
+
     if (!password)
       return res.status(400).send({ message: "Password is required" });
 
     const existingUser = await userSchema.findOne({ email });
-    if (existingUser)
-      return res.status(400).send({ message: "user with this already exists" });
 
-    const user = new User({ fullName, email, password });
-    await user.save();
+    if (existingUser)
+      return res.status(400).send({ message: "User already exists" });
+
+    const user = new userSchema({ fullName, email, password });
+
+    user.save();
 
     res.status(201).send({ message: "Registration successful" });
   } catch (error) {
+    console.log(error); // এখানে error দেখলে আসল কারণ বোঝা যাবে
     res.status(500).send({ message: "Internal server error" });
   }
 };
@@ -42,11 +46,20 @@ const login = async (req, res) => {
       return res.status(400).send({ message: "User not found" });
 
     const matchPass = await existingUser.comparePassword(password);
-   console.log(matchPass);
-   
-if(!matchPass) return res.status(400).send({message:"incorrect password"})
+    console.log(matchPass);
 
-    res.status(200).send({ message: "Login successful" });
+    if (!matchPass)
+      return res.status(400).send({ message: "incorrect password" });
+
+    const token = jwt.sign(
+      { id: existingUser._id, email: existingUser.email },
+      process.env.JWT_SEC
+    );
+    console.log(token);
+
+    res.cookie("mubin_token", token);
+
+    res.status(200).send({ message: "Login successful", acc_token: token });
   } catch (error) {
     res.status(500).send({ message: "Internal server error" });
   }
