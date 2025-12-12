@@ -2,6 +2,7 @@ const userSchema = require("../models/userSchema");
 const jwt = require("jsonwebtoken");
 
 const { isValidEmail } = require("../utils/validation");
+const { genarateAccessToken } = require("../utils/token");
 
 const signup = async (req, res) => {
   const { fullName, email, password } = req.body;
@@ -51,13 +52,9 @@ const login = async (req, res) => {
     if (!matchPass)
       return res.status(400).send({ message: "incorrect password" });
 
-    const token = jwt.sign(
-      { id: existingUser._id, email: existingUser.email },
-      process.env.JWT_SEC
-    );
-    console.log(token);
+     const token=genarateAccessToken({id:existingUser._id,email:existingUser.email})
 
-    res.cookie("mubin_token", token);
+     res.cookie("acc_token",token)
 
     res.status(200).send({ message: "Login successful", acc_token: token });
   } catch (error) {
@@ -66,3 +63,4 @@ const login = async (req, res) => {
 };
 
 module.exports = { signup, login };
+
