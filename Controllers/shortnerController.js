@@ -101,9 +101,9 @@ const redirectToUrl = async (req, res) => {
 
     if (!id) return;
 
-    const urlData = await shortUrlSchema.findOne({ urlShort: id });
+    const urlData = await  shortUrlSchema.findOne({ urlShort: id });
 
-    if (!urlData) return res.redirect("/");
+    if (!urlData) return  res.redirect("/");
 
     res.redirect(urlData.urlLong);
 
