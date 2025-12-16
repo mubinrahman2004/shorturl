@@ -5,8 +5,12 @@ const shortUrlSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+   urlShort: {            
+    type: String,
+    required: true,
+  },
   user: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: mongoose.Schema.ObjectId,
     ref: "user",
   },
   visitHistory: [

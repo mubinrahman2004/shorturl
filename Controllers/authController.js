@@ -27,7 +27,7 @@ const signup = async (req, res) => {
 
     res.status(201).send({ message: "Registration successful" });
   } catch (error) {
-    console.log(error); // এখানে error দেখলে আসল কারণ বোঝা যাবে
+    console.log(error); 
     res.status(500).send({ message: "Internal server error" });
   }
 };
@@ -47,7 +47,6 @@ const login = async (req, res) => {
       return res.status(400).send({ message: "User not found" });
 
     const matchPass = await existingUser.comparePassword(password);
-    console.log(matchPass);
 
     if (!matchPass)
       return res.status(400).send({ message: "incorrect password" });
@@ -55,12 +54,26 @@ const login = async (req, res) => {
      const token=genarateAccessToken({id:existingUser._id,email:existingUser.email})
 
      res.cookie("acc_token",token)
-
+     
     res.status(200).send({ message: "Login successful", acc_token: token });
   } catch (error) {
+    console.log(error);
     res.status(500).send({ message: "Internal server error" });
+    
   }
 };
 
-module.exports = { signup, login };
+const getProfile=async (req,res)=>{
+
+  try {
+      const user =req.user
+  const userData=await userSchema.findById(user.id)
+  if(!userData) return res.status(400).send({message:"user prpfile not found"})
+    res.status(200).send(userData)
+  } catch (error) {
+     res.status(500).send({ message: "Internal server error" });
+  }
+}
+
+module.exports = { signup, login,getProfile };
 

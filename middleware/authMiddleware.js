@@ -1,19 +1,27 @@
 const { verifiyToken } = require("../utils/token");
 
-const authMiddleware=(req,res,next)=>{
+const isAuthintic = (req, res, next) => {
   try {
-      const token =req.cookies.acc_token
-    const decoded=verifiyToken(token)
-    req.user=decoded;
+    const token = req.cookies.acc_token;
+    const decoded = verifiyToken(token);
+    req.user = decoded;
 
-    
-    next()
-
+    next();
   } catch (error) {
-   
-    next()
+    next();
   }
-   
-     
-}
-module.exports={authMiddleware}  
+};
+const authMiddleware = (req, res, next) => {
+  try {
+    const token = req.cookies.acc_token;
+    const decoded = verifiyToken(token);
+    if (!token || !decoded)
+      return res.status(401).send({ message: "unauthorized request" });
+    req.user = decoded;
+    next()
+  } catch (error) {
+    res.status(500).send({ message: "unauthorize request" });
+  }
+};
+
+module.exports = { isAuthintic, authMiddleware };

@@ -1,19 +1,14 @@
-const jwt =require("jsonwebtoken")
 
-const genarateAccessToken=(payload)=>{
-     const token = jwt.sign(
-     payload,
-      process.env.JWT_SEC
-    );
-    res.cookie("mubin_token", token);
+const jwt = require("jsonwebtoken");
 
-}
+const genarateAccessToken = (payload) => {
+  return jwt.sign(payload, process.env.JWT_SEC, {
+    expiresIn: "1d",
+  });
+};
 
-const verifiyToken=(token)=>{
-    const decoded = jwt.verify(token, process.env.JWT_SEC);
- console.log(decoded);
- 
-    return decoded
-}
+const verifiyToken = (token) => {
+  return jwt.verify(token, process.env.JWT_SEC);
+};
 
-module.exports={genarateAccessToken,verifiyToken}
+module.exports = { genarateAccessToken, verifiyToken };

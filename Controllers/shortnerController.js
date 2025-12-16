@@ -1,53 +1,3 @@
-// const { isValidUrl } = require("../utils/validation");
-// const shortUrlSchema=require("../models/shortnerSchema");
-// const shortnerSchema = require("../models/shortnerSchema");
-
-// const genarateRandomStr = (length = 5) => {
-//   const charecters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-//   let RandomStr = "";
-
-//   for (let i = 0; i < length; i++) {
-//     const randomNumber = Math.floor(Math.random() * charecters.length);
-//     RandomStr += charecters[randomNumber];
-//   }
-//   return
-// };
-
-// const creatshorlUrl = async (req, res) => {
-//  try {
-//    const { urlLong } = req.body;
-//   if (!urlLong) return res.status(400).send({ messege: "Url is requred" });
-
-//   if (!isValidUrl(urlLong))
-//     return res.status(400).send({ messege: "invalid url" });
-
-
-//   const urlShort=genarateRandomStr();
-
-//   const urlData=new shortUrlSchema({
-//     urlLong,
-//     urlLong
-//   })
-//   urlData.save()
-//   res.status(201).send({
-//    Longurl:urlData.urlLong,
-//    shorrUrl:urlData.urlShort
-//   })
-//  } catch (error) {
-//   res.status(500).send({message:"server error"})
-//  }
-// };
-// redirectToUrl= async (req,res)=>{
-//   const params=req.params
-
-//   if(!params.id) return
-//   const urlData =await shortUrlSchema.findOne({urlShort:params.id})
-//  if(!urlData)return res.redirect(` `)
-//   res.redirect(urlData.urlLong)
- 
-// }
-
-// module.exports={creatshorlUrl,redirectToUrl}
 const { isValidUrl } = require("../utils/validation");
 const shortUrlSchema = require("../models/shortnerSchema");
 
@@ -63,37 +13,35 @@ const genarateRandomStr = (length = 5) => {
   return RandomStr;
 };
 
-
 const creatshorlUrl = async (req, res) => {
   try {
     const { urlLong } = req.body;
+    console.log("user", req, res);
 
-    if (!urlLong)
-      return res.status(400).send({ message: "Url is required" });
+    if (!urlLong) return res.status(400).send({ message: "Url is required" });
 
     if (!isValidUrl(urlLong))
       return res.status(400).send({ message: "Invalid URL" });
 
     const urlShort = genarateRandomStr();
+    console.log("Generated short url:", urlShort);
 
     const urlData = new shortUrlSchema({
       urlLong,
-      urlShort
+      urlShort,
+      user: req.user?.id,
     });
 
     await urlData.save();
 
     res.status(201).send({
       longUrl: urlData.urlLong,
-      shortUrl: urlData.urlShort
+      shortUrl: urlData.urlShort,
     });
-
   } catch (error) {
-    console.log(error);
     res.status(500).send({ message: "Server error" });
   }
 };
-
 
 const redirectToUrl = async (req, res) => {
   try {
@@ -101,15 +49,39 @@ const redirectToUrl = async (req, res) => {
 
     if (!id) return;
 
-    const urlData = await  shortUrlSchema.findOne({ urlShort: id });
+    const urlData = await shortUrlSchema.findOne({ urlShort: id });
+    console.log(urlData);
 
-    if (!urlData) return  res.redirect("/");
+    if (!urlData) return res.redirect(process.env.CREAT_URL + urlData.urlShort);
 
+    if (urlData.user) {
+      urlData.visitHistory.push({ visitTime: Date.now() });
+      urlData.save();
+    }
     res.redirect(urlData.urlLong);
-
   } catch (error) {
-    res.status(500).send({ message: "Server error" });
+    res.status(process.env.CREAT_URL + urlData.urlShort);
   }
 };
+const  getShortUrls = async(req,res)=>{
+try {
+const user=req.user
 
-module.exports = { creatshorlUrl, redirectToUrl };
+const urlHistory=await shortUrlSchema.find({user:user.id}).select("-user")
+
+// console.log(urlHistory);
+console.log(req,res);
+
+
+res.status(200).send(urlHistory)
+
+  
+} catch (error) {
+  res.status(500).send({message:"server error"})
+}
+
+
+
+}
+
+module.exports = { creatshorlUrl, redirectToUrl,getShortUrls };
