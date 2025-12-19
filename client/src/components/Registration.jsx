@@ -1,9 +1,12 @@
 import React from "react";
 import { Link } from "react-router";
+import Input from "./ui/Input";
+import Button from "./ui/Button";
 
 const Registration = () => {
   return (
-    <div className="h-screen flex items-center justify-center">
+   <section>
+     <div className="h-screen flex items-center justify-center">
       <div className="h-96 flex items-center justify-center bg-gradient-to-r from-purple-400 via-pink-500 to-red-500">
         <div className="relative">
           <div className="absolute -top-2 -left-2 -right-2 -bottom-2 rounded-lg bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 shadow-lg animate-pulse" />
@@ -19,40 +22,24 @@ const Registration = () => {
             </h2>
             <form
 
-              className="space-y-5"> 
-              <input
-                className="w-full h-12 border border-gray-800 px-3 rounded-lg"
-                placeholder="fullname"
-                required
-                type="text"
-              />
-          
-              <input
-                className="w-full h-12 border border-gray-800 px-3 rounded-lg"
-                placeholder="Email"
-                id
-                name
-                type="email"
-                required
-              />
-              <input
-                className="w-full h-12 border border-gray-800 px-3 rounded-lg"
-                placeholder="Password"
-                id
-                name
-                required
-                type="password"
-              />
-              <button className="w-full h-12 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+              className="space-y-5">
+              <Input label={"FullName"} placeholder="Enter your fullName" />
+
+              <Input label={"Email"} type="email" placeholder="Enter your Email" />
+
+              <Input label={"Password"} type="password" placeholder="Enter your Password" />
+              <Button className="w-full h-12  bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                 Sign up
-              </button>
-              <Link to={'/signin'}>login</Link>
+              </Button>
+              <p className="text-brand">already an account? <Link to={'/signin'} className="text-red-400 cursor-pointer">Login</Link> </p>
+
 
             </form>
           </div>
         </div>
       </div>
     </div>
+   </section>
   );
 };
 

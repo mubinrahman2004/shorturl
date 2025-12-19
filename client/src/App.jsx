@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router";
 import Home from "./home/Home";
-import Layout from "./layout";
+import Layout from "./components/layout";
 import About from "./page/About";
 import Registration from "./components/Registration";
 import Login from "./components/Login";

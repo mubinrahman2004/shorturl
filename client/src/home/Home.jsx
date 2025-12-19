@@ -1,9 +1,15 @@
-import React from 'react'
+import { useState } from "react";
+import Button from "../components/ui/Button";
+import StepsTwo from "./StepsTwo";
+import StepOne from "./StepOne";
 
 const Home = () => {
   return (
-    <div>Home</div>
-  )
-}
+    <>
+      <StepOne />
+      <StepsTwo />
+    </>
+  );
+};
 
-export default Home
+export default Home;
