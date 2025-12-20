@@ -1,15 +1,19 @@
 const express = require('express')
-const route = require('./routes')
-require('dotenv').config()
+const cors = require('cors');
 const dbconfig = require('./dbconfig')
+require('dotenv').config()
+const route = require('./routes')
+const cookieparser =require("cookie-parser")
 const { isValidUrl } = require('./utils/validation')
 const app = express()
 app.use(express.json());
+app.use(cookieparser());
+app.use(cors());
+
 dbconfig()
 app.use(route)
 
-console.log(Math.floor(Math.random() * 100) + 1
-);
+
   
 
 app.listen(8000, () => {
