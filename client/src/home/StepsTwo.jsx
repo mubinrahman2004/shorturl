@@ -4,7 +4,7 @@ const StepsTwo = () => {
   const step = [
     {
       id: 1,
-      title: "Paste Long jsddj",
+      title: "Item 1",
       description:
         "Enter the long URL you want to shorten into the input field.",
     },
@@ -23,22 +23,35 @@ const StepsTwo = () => {
   ];
 
   return (
-    <section className="bg-gray-50 rounded-lg p-10">
-      <h2 className="text-3xl font-semibold text-center mb-10">
-        How URL Shortening Works
-      </h2>
+<section className="max-w-6xl mx-auto px-6 py-20">
+  <h2 className="text-4xl font-bold text-center mb-16">
+    How URL Shortening Works
+  </h2>
 
-      <div className="grid md:grid-cols-3 gap-8">
-        {step.map((item) => (
-          <div key={item.id} className="text-center">
-            <div className="text-4xl mb-3">📋</div>
-            <h3 className="font-semibold mb-2"> {item.title}</h3>
-            <p className="text-gray-600">{item.description}</p>
-          </div>
-        ))}
+  <div className="grid md:grid-cols-3 gap-10">
+    {step.map((item, index) => (
+      <div
+        key={item.id}
+        className="group bg-white rounded-2xl shadow-lg p-8 text-center hover:-translate-y-2 transition-all duration-300"
+      >
+        <div className="w-16 h-16 mx-auto mb-6 flex items-center justify-center rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white text-2xl font-bold">
+          {index + 1}
+        </div>
+
+        <h3 className="text-xl font-semibold mb-3 group-hover:text-blue-600 transition">
+          {item.title}
+        </h3>
+
+        <p className="text-gray-600">
+          {item.description}
+        </p>
       </div>
-    </section>
-  );
+    ))}
+  </div>
+</section>
+
+
+)
 };
 
 export default StepsTwo;

@@ -1,8 +1,4 @@
-// import React, { useState } from "react";
-// import Button from "../components/ui/Button";
-// import { urlServices } from "../api";
-// import Input from "../components/ui/Input";
-// import { Link } from "react-router";
+
 import React, { useState } from "react";
 import Button from "../components/ui/Button";
 import { Link } from 'react-router'
@@ -12,85 +8,7 @@ import { urlServices } from "../api";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-// const StepOne = () => {
-//   <ToastContainer position="top-right" autoClose={5000} theme="light" />;
-//   const [longUrl, setLongUrl] = useState("");
-//   const [shortUrl, setShortUrl] = useState("");
-//   const [copied, setCopied] = useState(false);
 
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-
-//     try {
-//       const res = await urlServices.creatShort(longUrl);
-//       setShortUrl(`http:localhost8000/${res.shortUrl}`);
-//     } catch (error) {
-//       console.log(error);
-//     }
-//   };
-
-//   const handleCopy = async () => {
-//     try {
-//       await navigator.clipboard.writeText(shortUrl);
-//       setCopied(true);
-
-//       setTimeout(() => {
-//         setCopied(false);
-//       }, 2000);
-//     } catch (error) {
-//       console.error("Copy failed", error);
-//     }
-//   };
-//   return (
-//     <>
-//       <ToastContainer />
-//       <div className="max-w-6xl mx-auto px-4 py-10">
-//         <section className="text-center mb-20">
-//           <h1 className="text-4xl font-bold mb-4">Shorten Your Long URLs</h1>
-//           <p className="text-gray-600 mb-8">
-//             Paste your long URL and get a short, shareable link instantly.
-//           </p>
-
-//           <form
-//             onSubmit={handleSubmit}
-//             className="flex flex-col md:flex-row gap-3 justify-center"
-//           >
-//             <Input
-//               type="url"
-//               placeholder="Enter your long URL here"
-//               value={longUrl}
-//               onChange={(e) => setLongUrl(e.target.value)}
-//               className="w-full md:w-2/3 border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-//               required
-//             />
-
-//             <Button type="submit" className="bg-blue-400">
-//               push
-//             </Button>
-//           </form>
-
-//           {shortUrl && (
-//             <div className="mt-6 w-fill flex max-w-xl bg-gray-200 p-4 rounded-md items-center justify-between">
-//               <Link
-//                 to={`/${shortUrl}`}
-//                 target="_blank"
-//                 rel="noopener noreferrer"
-//                 className="text-blue-700  font-medium truncate"
-//               >
-//                 {" "}
-//                 {shortUrl}
-//               </Link>
-
-//               <Button onClick={handleCopy} variant="secondary">
-//                 {copied ? "Copied!" : "Copy"}
-//               </Button>
-//             </div>
-//           )}
-//         </section>
-//       </div>
-//     </>
-//   );
-// };
 const StepOne = () => {
   const [longUrl, setLongUrl] = useState("");
   const [shortUrl, setShortUrl] = useState("");
@@ -132,53 +50,64 @@ const StepOne = () => {
     <>
       <ToastContainer position="top-right" autoClose={3000} />
 
-      <div className="max-w-6xl mx-auto px-4 py-10">
-        <section className="text-center mb-20">
-          <h1 className="text-4xl font-bold mb-4">
-            Shorten Your Long URLs
-          </h1>
-          <p className="text-gray-600 mb-8">
-            Paste your long URL and get a short, shareable link instantly.
-          </p>
+    <div className="relative overflow-hidden">
+  {/* Background gradient */}
+  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-purple-500/20 to-pink-500/20 blur-3xl" />
 
-          <form
-            onSubmit={handleSubmit}
-            className="flex flex-col md:flex-row gap-3 justify-center"
-          >
-            <Input
-              type="url"
-              placeholder="Enter your long URL here"
-              value={longUrl}
-              onChange={(e) => setLongUrl(e.target.value)}
-              className="w-full md:w-2/3"
-              required
-            />
+  <section className="relative max-w-5xl mx-auto px-6 py-24 text-center">
+    <h1 className="text-5xl font-extrabold mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+      Enter Your Long URL
+    </h1>
 
-            <Button type="submit" className="bg-blue-400">
-              Push
-            </Button>
-          </form>
+    <p className="text-gray-600 max-w-xl mx-auto mb-12">
+      Turn long, messy links into clean, shareable short URLs in seconds.
+    </p>
 
-          {shortUrl && (
-            <div className="mt-6 w-full max-w-xl mx-auto flex items-center justify-between bg-gray-200 p-4 rounded-md">
-              
-              {/* ✅ Clickable Short URL */}
-              <Link
-                to={shortUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-700 font-medium truncate"
-              >
-                {shortUrl}
-              </Link>
-              
-              <Button onClick={handleCopy} variant="secondary">
-                {copied ? "Copied!" : "Copy"}
-              </Button>
-            </div>
-          )}
-        </section>
+    {/* Form */}
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-col md:flex-row items-center gap-4 bg-white/70 backdrop-blur-md shadow-xl rounded-2xl p-4 max-w-3xl mx-auto"
+    >
+      <Input
+        type="url"
+        placeholder="Paste your long URL here..."
+        value={longUrl}
+        onChange={(e) => setLongUrl(e.target.value)}
+        className="flex-1 text-lg"
+        required
+      />
+
+      <Button
+        type="submit"
+        className="px-8 py-3 text-white font-semibold rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 hover:scale-105 transition-transform"
+      >
+        Shorten
+      </Button>
+    </form>
+
+    {/* Result */}
+    {shortUrl && (
+      <div className="mt-8 max-w-3xl mx-auto flex items-center gap-4 bg-white shadow-lg rounded-xl px-6 py-4">
+        <a
+          href={shortUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex-1 text-blue-600 font-medium truncate hover:underline"
+        >
+          {shortUrl}
+        </a>
+
+        <Button
+          onClick={handleCopy}
+          className="px-5 py-2 rounded-lg bg-gray-900 text-white hover:bg-black transition"
+        >
+          {copied ? "Copied!" : "Copy"}
+        </Button>
       </div>
+    )}
+  </section>
+</div>
+
     </>
   );
 };
