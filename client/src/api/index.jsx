@@ -41,7 +41,7 @@ const authServises = {
 };
 const urlServices = {
   creatShort: async (urlLong) => {
-    const res = await api.post("/url/creat", { urlLong });
+    const res = await api.post("/url/creat",  { urlLong });
     return res.data;
   },
   getAll: async () => {
