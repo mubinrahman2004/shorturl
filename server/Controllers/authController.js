@@ -25,7 +25,7 @@ const signup = async (req, res) => {
 
     user.save();
 
-    res.status(201).send({ message: "Registration successful" });
+    res.status(201).send({ message: "Registration is successful" });
   } catch (error) {
     console.log(error); 
     res.status(500).send({ message: "Internal server error" });

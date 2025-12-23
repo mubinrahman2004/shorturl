@@ -26,12 +26,9 @@ const authServises = {
     const res = await api.post("/auth/login", { email, password });
     return res.data;
   },
-  registration: async (fllName, email, password) => {
-    const res = await api.post("/auth/registration", {
-      fllName,
-      email,
-      password,
-    });
+  registration: async (registerData) => {
+
+    const res = await api.post("/auth/signup", registerData);
     return res.data;
   },
   getProfile: async () => {
@@ -41,7 +38,7 @@ const authServises = {
 };
 const urlServices = {
   creatShort: async (urlLong) => {
-    const res = await api.post("/url/creat",  { urlLong });
+    const res = await api.post("/url/creat", { urlLong });
     return res.data;
   },
   getAll: async () => {
@@ -49,4 +46,4 @@ const urlServices = {
     return res.data;
   },
 };
-export{authServises,urlServices}
+export { authServises, urlServices };
