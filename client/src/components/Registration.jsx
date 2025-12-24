@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import Input from "./ui/Input";
 import Button from "./ui/Button";
@@ -7,9 +7,11 @@ import { authServises } from "../api";
 import { toast, ToastContainer } from "react-toastify";
 
 const Registration = () => {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm();
   const onSubmit = async (data) => {
@@ -20,10 +22,20 @@ const Registration = () => {
 
       console.log(res);
 
-      toast.success("Registration  is successfully ");
+      toast.success("Registration successful");
+
+      setTimeout(() => {
+        navigate("/signin");
+      }, 1500);
     } catch (error) {
-      console.log(error);
-      toast.error("Failed to create short URL");
+      if (error.response.data.message === "user width email already exists") {
+        return setError("email", {
+          message: error.response.data.message,
+        });
+      }
+      setError("apiError", {
+        message: error.response.data.message,
+      });
     }
   };
 
@@ -66,7 +78,9 @@ const Registration = () => {
               })}
               error={errors?.password?.message}
             />
-
+            {errors?.apiError?.message && (
+              <p className="text-sm text-red-400">{errors.apiError.message}</p>
+            )}
             <Button
               type="submit"
               className="w-full py-3 rounded-xl text-white font-semibold bg-gradient-to-r from-purple-500 to-pink-500 hover:scale-[1.02] transition-transform"
