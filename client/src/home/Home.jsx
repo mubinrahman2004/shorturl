@@ -5,7 +5,7 @@ import StepOne from "./StepOne";
 const Home = () => {
 
   return (
-    <>
+    <>. 
        <StepOne />
       <StepsTwo />
     </>
