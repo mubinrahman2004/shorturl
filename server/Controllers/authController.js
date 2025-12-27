@@ -23,8 +23,8 @@ const signup = async (req, res) => {
 
     const user = new userSchema({ fullName, email, password });
 
-    user.save();
-
+    user.save();  
+ 
     res.status(201).send({ message: "Registration is successful" });
   } catch (error) {
     console.log(error); 
@@ -44,16 +44,20 @@ const login = async (req, res) => {
 
     const existingUser = await userSchema.findOne({ email });
     if (!existingUser)
-      return res.status(400).send({ message: "User not found" });
+      return res.status(400).send({ message: "invalid request" });
 
     const matchPass = await existingUser.comparePassword(password);
 
     if (!matchPass)
-      return res.status(400).send({ message: "incorrect password" });
+      return res.status(400).send({ message: "invalid request" });
 
      const token=genarateAccessToken({id:existingUser._id,email:existingUser.email})
 
-     res.cookie("acc_token",token)
+     res.cookie("acc_token",token,{
+      httpOnly:false,
+      secure:false,
+
+     })
      
     res.status(200).send({ message: "Login successful", acc_token: token });
   } catch (error) {

@@ -45,7 +45,7 @@ const StepOne = () => {
     } catch (error) {
       toast.error("Copy failed");
       console.error(error);
-      
+         
     }
   };
 
