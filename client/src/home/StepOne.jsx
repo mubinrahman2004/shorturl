@@ -27,6 +27,7 @@ const StepOne = () => {
     } catch (error) {
       toast.error("Failed to create short URL");
       console.log(error);
+      
     }
   };
 

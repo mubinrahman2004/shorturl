@@ -19,7 +19,6 @@ const Registration = () => {
 
     try {
       const res = await authServises.registration(data);
-
       console.log(res);
 
       toast.success("Registration successful");
@@ -28,13 +27,17 @@ const Registration = () => {
         navigate("/signin");
       }, 1500);
     } catch (error) {
-      if (error.response.data.message === "user width email already exists") {
-        return setError("email", {
-          message: error.response.data.message,
+      if (
+        error?.response?.data?.message === "user width email already exists"
+      ) {
+        setError("email", {
+          message: error?.response?.data?.message,
         });
+        return;
       }
+
       setError("apiError", {
-        message: error.response.data.message,
+        message: error?.response?.data?.message || "Something went wrong",
       });
     }
   };
@@ -82,6 +85,7 @@ const Registration = () => {
               <p className="text-sm text-red-400">{errors.apiError.message}</p>
             )}
             <Button
+              // onSubmit={handleSubmit(onSubmit)}
               type="submit"
               className="w-full py-3 rounded-xl text-white font-semibold bg-gradient-to-r from-purple-500 to-pink-500 hover:scale-[1.02] transition-transform"
             >
@@ -99,11 +103,6 @@ const Registration = () => {
             </p>
           </form>
         </div>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          <Button type="submit" className="w-full">
-            Sign Up
-          </Button>
-        </form>
       </section>
     </>
   );
