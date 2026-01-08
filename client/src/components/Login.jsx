@@ -15,23 +15,37 @@ const Login = () => {
     setError,
     formState: { errors },
   } = useForm();
-  const handelLogin = async (data) => {
-    try {
-      console.log(data);
-      const res = await authServises.login(data);
+  // const handelLogin = async (data) => {
+  //   try {
+  //     console.log(data);
+  //     const res = await authServises.login(data);
 
-      toast.success("login successfull")
-       setTimeout(() => {
-        navigate("/");
-      }, 1500);
-      console.log(res);
-    } catch (error) {
-      console.log(error.response.data.message);
-      setError("apiError", {
-        message: error.response.data.message,
-      });
-    }
-  };
+  //     toast.success("login successfull")
+  //      setTimeout(() => {
+  //       navigate("/");
+  //     }, 1500);
+  //     console.log(res);
+  //   } catch (error) {
+  //     console.log(error.response.data.message);
+  //     setError("apiError", {
+  //       message: error.response.data.message,
+  //     });
+  //   }
+  // };
+const handelLogin = async (data) => {
+  try {
+    const res = await authServises.login(data);
+    toast.success("Login successful");
+
+    setTimeout(() => {
+      navigate("/");
+    }, 1500);
+  } catch (error) {
+    setError("apiError", {
+      message: error?.response?.data?.message || "Login failed",
+    });
+  }
+};
 
   return (
 <>

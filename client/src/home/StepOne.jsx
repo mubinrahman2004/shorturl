@@ -14,23 +14,35 @@ const StepOne = () => {
   const [shortUrl, setShortUrl] = useState("");
   const [copied, setCopied] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
 
-    try {
-      const res = await urlServices.creatShort(longUrl);
+  //   try {
+  //     const res = await urlServices.creatShort(longUrl);
 
-      const fullShortUrl = `http://localhost:8000/${res.shortUrl}`;
-      setShortUrl(fullShortUrl);
+  //     const fullShortUrl = `http://localhost:8000/${res.shortUrl}`;
+  //     setShortUrl(fullShortUrl);
 
-      toast.success("Short URL creat successfully ");
-    } catch (error) {
-      toast.error("Failed to create short URL");
-      console.log(error);
+  //     toast.success("Short URL creat successfully ");
+  //   } catch (error) {
+  //     toast.error("Failed to create short URL");
+  //     console.log(error);
 
       
-    }
-  };
+  //   }
+  // };
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  try {
+    const res = await urlServices.creatShort(longUrl);
+    const fullShortUrl = `http://localhost:8000/${res.shortUrl}`;
+    setShortUrl(fullShortUrl);
+    toast.success("Short URL created successfully");
+  } catch (error) {
+    toast.error(error?.response?.data?.message || "Unauthorized");
+  }
+};
 
   const handleCopy = async () => {
     try {

@@ -1,34 +1,110 @@
-const userSchema = require("../models/userSchema");
-const jwt = require("jsonwebtoken");
+// const userSchema = require("../models/userSchema");
+// const jwt = require("jsonwebtoken");
 
+// const { isValidEmail } = require("../utils/validation");
+// const { genarateAccessToken } = require("../utils/token");
+
+// const signup = async (req, res) => {
+//   const { fullName, email, password } = req.body;
+
+//   try {
+//     if (!fullName)
+//       return res.status(400).send({ message: "Full Name is required" });
+
+//     if (!email) return res.status(400).send({ message: "Email is required" });
+
+//     if (!password)
+//       return res.status(400).send({ message: "Password is required" });
+
+//     const existingUser = await userSchema.findOne({ email });
+
+//     if (existingUser)
+//       return res.status(400).send({ message: "User already exists" });
+
+//     const user = new userSchema({ fullName, email, password });
+
+//     user.save();  
+ 
+//     res.status(201).send({ message: "Registration is successful" });
+//   } catch (error) {
+//     console.log(error); 
+//     res.status(500).send({ message: "Internal server error" });
+//   }
+// };
+
+// const login = async (req, res) => {
+//   try {
+//     const { email, password } = req.body;
+
+//     if (!email) return res.status(400).send({ message: "Email is required" });
+//     if (!isValidEmail(email))
+//       return res.status(400).send({ message: "enter a valid email " });
+//     if (!password)
+//       return res.status(400).send({ message: "Password is required" });
+
+//     const existingUser = await userSchema.findOne({ email });
+//     if (!existingUser)
+//       return res.status(400).send({ message: "invalid request" });
+
+//     const matchPass = await existingUser.comparePassword(password);
+
+//     if (!matchPass)
+//       return res.status(400).send({ message: "invalid request" });
+
+//      const token=genarateAccessToken({id:existingUser._id,email:existingUser.email})
+
+//      res.cookie("acc_token",token,{
+//       httpOnly:false,
+//       secure:false,
+
+//      })
+     
+//     res.status(200).send({ message: "Login successful", acc_token: token });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).send({ message: "Internal server error" });
+    
+//   }
+// };
+
+// const getProfile=async (req,res)=>{
+
+//   try {
+//       const user =req.user
+//   const userData=await userSchema.findById(user.id)
+//   if(!userData) return res.status(400).send({message:"user prpfile not found"})
+//     res.status(200).send(userData)
+//   } catch (error) {
+//      res.status(500).send({ message: "Internal server error" });
+//   }
+// }
+
+// module.exports = { signup, login,getProfile };
+
+const userSchema = require("../models/userSchema");
 const { isValidEmail } = require("../utils/validation");
 const { genarateAccessToken } = require("../utils/token");
 
 const signup = async (req, res) => {
-  const { fullName, email, password } = req.body;
-
   try {
-    if (!fullName)
-      return res.status(400).send({ message: "Full Name is required" });
+    const { fullName, email, password } = req.body;
 
-    if (!email) return res.status(400).send({ message: "Email is required" });
+    if (!fullName || !email || !password)
+      return res.status(400).send({ message: "All fields required" });
 
-    if (!password)
-      return res.status(400).send({ message: "Password is required" });
+    if (!isValidEmail(email))
+      return res.status(400).send({ message: "Invalid email" });
 
     const existingUser = await userSchema.findOne({ email });
-
     if (existingUser)
       return res.status(400).send({ message: "User already exists" });
 
     const user = new userSchema({ fullName, email, password });
+    await user.save();
 
-    user.save();  
- 
-    res.status(201).send({ message: "Registration is successful" });
+    res.status(201).send({ message: "Registration successful" });
   } catch (error) {
-    console.log(error); 
-    res.status(500).send({ message: "Internal server error" });
+    res.status(500).send({ message: "Server error" });
   }
 };
 
@@ -36,48 +112,34 @@ const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    if (!email) return res.status(400).send({ message: "Email is required" });
-    if (!isValidEmail(email))
-      return res.status(400).send({ message: "enter a valid email " });
-    if (!password)
-      return res.status(400).send({ message: "Password is required" });
+    const user = await userSchema.findOne({ email });
+    if (!user)
+      return res.status(400).send({ message: "Invalid credentials" });
 
-    const existingUser = await userSchema.findOne({ email });
-    if (!existingUser)
-      return res.status(400).send({ message: "invalid request" });
+    const match = await user.comparePassword(password);
+    if (!match)
+      return res.status(400).send({ message: "Invalid credentials" });
 
-    const matchPass = await existingUser.comparePassword(password);
+    const token = genarateAccessToken({
+      id: user._id,
+      email: user.email,
+    });
 
-    if (!matchPass)
-      return res.status(400).send({ message: "invalid request" });
+    res.cookie("acc_token", token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+    });
 
-     const token=genarateAccessToken({id:existingUser._id,email:existingUser.email})
-
-     res.cookie("acc_token",token,{
-      httpOnly:false,
-      secure:false,
-
-     })
-     
-    res.status(200).send({ message: "Login successful", acc_token: token });
+    res.status(200).send({ message: "Login successful" });
   } catch (error) {
-    console.log(error);
-    res.status(500).send({ message: "Internal server error" });
-    
+    res.status(500).send({ message: "Server error" });
   }
 };
 
-const getProfile=async (req,res)=>{
+const getProfile = async (req, res) => {
+  const user = await userSchema.findById(req.user.id).select("-password");
+  res.status(200).send(user);
+};
 
-  try {
-      const user =req.user
-  const userData=await userSchema.findById(user.id)
-  if(!userData) return res.status(400).send({message:"user prpfile not found"})
-    res.status(200).send(userData)
-  } catch (error) {
-     res.status(500).send({ message: "Internal server error" });
-  }
-}
-
-module.exports = { signup, login,getProfile };
-
+module.exports = { signup, login, getProfile };

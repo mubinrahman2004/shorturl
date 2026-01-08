@@ -17,5 +17,5 @@ function isValidUrl(url) {
 
 
 module.exports = { isValidEmail,isValidUrl };
-
+ 
  
